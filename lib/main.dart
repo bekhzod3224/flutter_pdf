@@ -15,57 +15,55 @@ class _MyAppState extends State<MyApp> {
   String remotePDFpath = "";
   String corruptedPathPDF = "";
 
+  List list = ["rezume.pdf", "rezume.pdf"];
+
   @override
   void initState() {
     super.initState();
-    
-    fromAsset('assets/rezume.pdf', 'rezume.pdf').then((f) {
-      setState(() {
-        pathPDF = f.path;
-      });
-    });
-  
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      
       title: 'Flutter PDF View',
       debugShowCheckedModeBanner: false,
-      
       home: Scaffold(
         appBar: AppBar(title: const Text('Pdf ')),
-        body: Center(child: Column(
-              children: <Widget>[
-                Container(
-                  child: Expanded(
-                    child: ListView.builder(
-                      itemCount: 10,
-                      itemBuilder: (context, index) {
-                        return TextButton(
-                      child: Text("Open PDF"),
+        body: Center(
+            child: Column(
+          children: <Widget>[
+            Container(
+              child: Expanded(
+                child: ListView.builder(
+                  itemCount: list.length,
+                  itemBuilder: (context, index) {
+                    String path = list[index];
+                    return TextButton(
+                      child: Text(list[index]),
                       onPressed: () {
-                        if (pathPDF.isNotEmpty) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => PDFScreen(path: pathPDF),
-                            ),
-                          );
-                        }
+                       
+                        fromAsset("assets/$path", path).then((f) {
+                          
+                            if (f.path.isNotEmpty) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      PDFScreen(path: f.path),
+                                ),
+                              );
+                            }
+                          
+                        });
                       },
                     );
-                      },),
-                  ),
-                )
-                
-
-              ],
+                  },
+                ),
+              ),
             )
-          ),
+          ],
+        )),
       ),
     );
   }
 }
-
